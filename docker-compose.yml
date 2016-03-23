@@ -1,0 +1,20 @@
+version: '2'
+services:
+  consul:
+    image: progrium/consul
+    command: -server -bootstrap -ui-dir /ui
+    ports:
+        - 8400:8400
+        - 8500:8500
+        - 8600:53/udp
+  vault:
+    build: .
+    command: server -config=/etc/vault/config.hcl
+    ports:
+      - 8200:8200
+    volumes:
+      - ./config:/etc/vault
+    links:
+      - consul:consul
+    cap_add:
+        - IPC_LOCK
